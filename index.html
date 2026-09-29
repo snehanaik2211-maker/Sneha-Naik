@@ -1,0 +1,1619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>MedCare - Medication Management System</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            background: #f4f7fb;
+            color: #263238;
+        }
+
+        /* ================= HEADER ================= */
+
+        header {
+            background: linear-gradient(135deg, #1976d2, #0d47a1);
+            color: white;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 45px;
+            height: 45px;
+            background: white;
+            color: #1976d2;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .logo h1 {
+            font-size: 24px;
+        }
+
+        .logo p {
+            font-size: 13px;
+            opacity: 0.85;
+        }
+
+        .date-box {
+            text-align: right;
+            font-size: 14px;
+        }
+
+        /* ================= SIDEBAR ================= */
+
+        .container {
+            display: flex;
+            min-height: calc(100vh - 85px);
+        }
+
+        .sidebar {
+            width: 230px;
+            background: #ffffff;
+            border-right: 1px solid #ddd;
+            padding: 20px 10px;
+        }
+
+        .sidebar h3 {
+            color: #78909c;
+            font-size: 12px;
+            padding: 10px 15px;
+            text-transform: uppercase;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 13px 15px;
+            margin-bottom: 5px;
+            border-radius: 8px;
+            cursor: pointer;
+            color: #455a64;
+            transition: 0.3s;
+        }
+
+        .menu-item:hover,
+        .menu-item.active {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        /* ================= MAIN ================= */
+
+        main {
+            flex: 1;
+            padding: 30px;
+            overflow-x: auto;
+        }
+
+        .page-title {
+            margin-bottom: 25px;
+        }
+
+        .page-title h2 {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+
+        .page-title p {
+            color: #78909c;
+        }
+
+        /* ================= DASHBOARD CARDS ================= */
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            padding: 22px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .card-icon {
+            width: 55px;
+            height: 55px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 25px;
+        }
+
+        .blue {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .green {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .orange {
+            background: #fff3e0;
+            color: #ef6c00;
+        }
+
+        .red {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .card h3 {
+            font-size: 25px;
+            margin-bottom: 3px;
+        }
+
+        .card p {
+            color: #78909c;
+            font-size: 13px;
+        }
+
+        /* ================= CONTENT GRID ================= */
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+
+        .panel {
+            background: white;
+            border-radius: 12px;
+            padding: 22px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+            margin-bottom: 20px;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+        .panel-header h3 {
+            font-size: 18px;
+        }
+
+        /* ================= TABLE ================= */
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 700px;
+        }
+
+        th {
+            background: #f5f7fa;
+            color: #607d8b;
+            font-size: 13px;
+            text-align: left;
+            padding: 13px;
+        }
+
+        td {
+            padding: 14px 13px;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+        }
+
+        tr:hover {
+            background: #fafcff;
+        }
+
+        /* ================= STATUS ================= */
+
+        .status {
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        .status-taken {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .status-pending {
+            background: #fff3e0;
+            color: #ef6c00;
+        }
+
+        .status-missed {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        /* ================= BUTTONS ================= */
+
+        button {
+            border: none;
+            cursor: pointer;
+            border-radius: 7px;
+            padding: 9px 14px;
+            font-size: 13px;
+            transition: 0.3s;
+        }
+
+        .btn-primary {
+            background: #1976d2;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #0d47a1;
+        }
+
+        .btn-success {
+            background: #2e7d32;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #c62828;
+            color: white;
+        }
+
+        .btn-small {
+            padding: 6px 10px;
+            font-size: 12px;
+        }
+
+        /* ================= SEARCH ================= */
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-box input {
+            padding: 10px 13px;
+            border: 1px solid #ddd;
+            border-radius: 7px;
+            outline: none;
+            width: 220px;
+        }
+
+        .search-box input:focus {
+            border-color: #1976d2;
+        }
+
+        /* ================= FORM ================= */
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-size: 13px;
+            font-weight: bold;
+            color: #546e7a;
+        }
+
+        input,
+        select,
+        textarea {
+            padding: 11px;
+            border: 1px solid #d5dce2;
+            border-radius: 7px;
+            outline: none;
+            font-size: 14px;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #1976d2;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        /* ================= MEDICATION TIMELINE ================= */
+
+        .timeline-item {
+            display: flex;
+            gap: 15px;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .timeline-time {
+            width: 65px;
+            font-weight: bold;
+            color: #1976d2;
+        }
+
+        .medicine-box {
+            flex: 1;
+        }
+
+        .medicine-box h4 {
+            margin-bottom: 5px;
+        }
+
+        .medicine-box p {
+            font-size: 13px;
+            color: #78909c;
+        }
+
+        /* ================= ALERT ================= */
+
+        .alert {
+            padding: 13px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            font-size: 13px;
+        }
+
+        .alert-warning {
+            background: #fff8e1;
+            color: #8d6e00;
+            border-left: 4px solid #ffc107;
+        }
+
+        .alert-danger {
+            background: #ffebee;
+            color: #b71c1c;
+            border-left: 4px solid #f44336;
+        }
+
+        /* ================= MODAL ================= */
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: white;
+            width: 600px;
+            max-width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            border-radius: 12px;
+            padding: 25px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .close {
+            font-size: 25px;
+            cursor: pointer;
+            color: #78909c;
+        }
+
+        .close:hover {
+            color: #c62828;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media(max-width: 1100px) {
+            .cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media(max-width: 750px) {
+            header {
+                padding: 15px;
+            }
+
+            .date-box {
+                display: none;
+            }
+
+            .sidebar {
+                width: 65px;
+                padding: 15px 7px;
+            }
+
+            .sidebar h3,
+            .menu-text {
+                display: none;
+            }
+
+            .menu-item {
+                justify-content: center;
+                padding: 13px 5px;
+            }
+
+            main {
+                padding: 18px;
+            }
+
+            .cards {
+                grid-template-columns: 1fr;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full {
+                grid-column: auto;
+            }
+
+            .search-box input {
+                width: 150px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- ================= HEADER ================= -->
+
+<header>
+    <div class="logo">
+        <div class="logo-icon">+</div>
+        <div>
+            <h1>MedCare</h1>
+            <p>Old Age Home Medication Management</p>
+        </div>
+    </div>
+
+    <div class="date-box">
+        <div id="currentDate"></div>
+        <div id="currentTime"></div>
+    </div>
+</header>
+
+
+<div class="container">
+
+    <!-- ================= SIDEBAR ================= -->
+
+    <aside class="sidebar">
+
+        <h3>Menu</h3>
+
+        <div class="menu-item active" onclick="showSection('dashboard')">
+            <span>📊</span>
+            <span class="menu-text">Dashboard</span>
+        </div>
+
+        <div class="menu-item" onclick="showSection('medications')">
+            <span>💊</span>
+            <span class="menu-text">Medications</span>
+        </div>
+
+        <div class="menu-item" onclick="showSection('residents')">
+            <span>👴</span>
+            <span class="menu-text">Residents</span>
+        </div>
+
+        <div class="menu-item" onclick="openModal()">
+            <span>➕</span>
+            <span class="menu-text">Add Medication</span>
+        </div>
+
+    </aside>
+
+
+    <!-- ================= MAIN CONTENT ================= -->
+
+    <main>
+
+        <!-- ================= DASHBOARD ================= -->
+
+        <section id="dashboard">
+
+            <div class="page-title">
+                <h2>Medication Dashboard</h2>
+                <p>Monitor and manage medications for residents.</p>
+            </div>
+
+
+            <!-- STATISTICS -->
+
+            <div class="cards">
+
+                <div class="card">
+                    <div class="card-icon blue">👴</div>
+                    <div>
+                        <h3 id="residentCount">24</h3>
+                        <p>Total Residents</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon green">💊</div>
+                    <div>
+                        <h3 id="medicationCount">0</h3>
+                        <p>Active Medications</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon orange">⏰</div>
+                    <div>
+                        <h3 id="pendingCount">0</h3>
+                        <p>Pending Doses</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon red">⚠</div>
+                    <div>
+                        <h3 id="missedCount">0</h3>
+                        <p>Missed Doses</p>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="content-grid">
+
+                <!-- TODAY'S MEDICATIONS -->
+
+                <div class="panel">
+
+                    <div class="panel-header">
+                        <h3>Today's Medication Schedule</h3>
+
+                        <div class="search-box">
+                            <input
+                                type="text"
+                                id="searchInput"
+                                placeholder="Search resident..."
+                                onkeyup="searchMedication()"
+                            >
+                        </div>
+                    </div>
+
+                    <div class="table-container">
+
+                        <table>
+
+                            <thead>
+                                <tr>
+                                    <th>Resident</th>
+                                    <th>Medication</th>
+                                    <th>Dosage</th>
+                                    <th>Time</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="medicationTable">
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ALERTS -->
+
+                <div>
+
+                    <div class="panel">
+
+                        <div class="panel-header">
+                            <h3>⚠ Alerts</h3>
+                        </div>
+
+                        <div class="alert alert-warning">
+                            <strong>Low Stock</strong><br>
+                            Paracetamol stock is running low.
+                        </div>
+
+                        <div class="alert alert-danger">
+                            <strong>Missed Dose</strong><br>
+                            One medication dose requires attention.
+                        </div>
+
+                    </div>
+
+
+                    <!-- NEXT MEDICATION -->
+
+                    <div class="panel">
+
+                        <div class="panel-header">
+                            <h3>Next Medication</h3>
+                        </div>
+
+                        <div class="timeline-item">
+
+                            <div class="timeline-time">
+                                02:00 PM
+                            </div>
+
+                            <div class="medicine-box">
+                                <h4>Mrs. Lakshmi</h4>
+                                <p>Metformin - 500 mg</p>
+                                <span class="status status-pending">
+                                    Pending
+                                </span>
+                            </div>
+
+                        </div>
+
+                        <div class="timeline-item">
+
+                            <div class="timeline-time">
+                                04:00 PM
+                            </div>
+
+                            <div class="medicine-box">
+                                <h4>Mr. Ramesh</h4>
+                                <p>Amlodipine - 5 mg</p>
+                                <span class="status status-pending">
+                                    Pending
+                                </span>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= MEDICATION SECTION ================= -->
+
+        <section id="medications" style="display:none;">
+
+            <div class="page-title">
+                <h2>Medication Management</h2>
+                <p>View and manage all prescribed medications.</p>
+            </div>
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <h3>Medication List</h3>
+
+                    <button class="btn-primary" onclick="openModal()">
+                        + Add Medication
+                    </button>
+
+                </div>
+
+                <div class="table-container">
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>Resident</th>
+                                <th>Medicine</th>
+                                <th>Dosage</th>
+                                <th>Frequency</th>
+                                <th>Start Date</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="allMedicationTable">
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= RESIDENT SECTION ================= -->
+
+        <section id="residents" style="display:none;">
+
+            <div class="page-title">
+                <h2>Residents</h2>
+                <p>Registered residents of the old age home.</p>
+            </div>
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <h3>Resident Information</h3>
+
+                    <button class="btn-primary" onclick="addResident()">
+                        + Add Resident
+                    </button>
+
+                </div>
+
+                <div class="table-container">
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Age</th>
+                                <th>Room</th>
+                                <th>Contact</th>
+                                <th>Medical Condition</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="residentTable">
+
+                            <tr>
+                                <td>Mrs. Lakshmi</td>
+                                <td>72</td>
+                                <td>101</td>
+                                <td>9876543210</td>
+                                <td>Diabetes</td>
+                            </tr>
+
+                            <tr>
+                                <td>Mr. Ramesh</td>
+                                <td>78</td>
+                                <td>102</td>
+                                <td>9876543211</td>
+                                <td>Hypertension</td>
+                            </tr>
+
+                            <tr>
+                                <td>Mrs. Saraswati</td>
+                                <td>75</td>
+                                <td>103</td>
+                                <td>9876543212</td>
+                                <td>Arthritis</td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- ================= ADD MEDICATION MODAL ================= -->
+
+<div class="modal" id="medicationModal">
+
+    <div class="modal-content">
+
+        <div class="modal-header">
+
+            <h2>Add Medication</h2>
+
+            <span class="close" onclick="closeModal()">
+                &times;
+            </span>
+
+        </div>
+
+        <form id="medicationForm">
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label>Resident Name</label>
+
+                    <input
+                        type="text"
+                        id="residentName"
+                        placeholder="Enter resident name"
+                        required
+                    >
+                </div>
+
+
+                <div class="form-group">
+                    <label>Medication Name</label>
+
+                    <input
+                        type="text"
+                        id="medicineName"
+                        placeholder="e.g. Paracetamol"
+                        required
+                    >
+                </div>
+
+
+                <div class="form-group">
+                    <label>Dosage</label>
+
+                    <input
+                        type="text"
+                        id="dosage"
+                        placeholder="e.g. 500 mg"
+                        required
+                    >
+                </div>
+
+
+                <div class="form-group">
+                    <label>Frequency</label>
+
+                    <select id="frequency" required>
+
+                        <option value="">Select frequency</option>
+                        <option>Once Daily</option>
+                        <option>Twice Daily</option>
+                        <option>Three Times Daily</option>
+                        <option>Four Times Daily</option>
+                        <option>As Needed</option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Medication Time</label>
+
+                    <input
+                        type="time"
+                        id="medicationTime"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Start Date</label>
+
+                    <input
+                        type="date"
+                        id="startDate"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>End Date</label>
+
+                    <input
+                        type="date"
+                        id="endDate"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Prescribed By</label>
+
+                    <input
+                        type="text"
+                        id="doctor"
+                        placeholder="Doctor's name"
+                    >
+
+                </div>
+
+
+                <div class="form-group full">
+
+                    <label>Instructions</label>
+
+                    <textarea
+                        id="instructions"
+                        rows="3"
+                        placeholder="e.g. Take after food"
+                    ></textarea>
+
+                </div>
+
+            </div>
+
+            <br>
+
+            <button
+                type="submit"
+                class="btn-primary"
+                style="width:100%;"
+            >
+                Save Medication
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    /* ==========================================
+       SAMPLE MEDICATION DATA
+    ========================================== */
+
+    let medications = [
+        {
+            id: 1,
+            resident: "Mrs. Lakshmi",
+            medicine: "Metformin",
+            dosage: "500 mg",
+            frequency: "Twice Daily",
+            time: "08:00",
+            startDate: "2026-09-29",
+            status: "Taken"
+        },
+
+        {
+            id: 2,
+            resident: "Mr. Ramesh",
+            medicine: "Amlodipine",
+            dosage: "5 mg",
+            frequency: "Once Daily",
+            time: "10:00",
+            startDate: "2026-09-29",
+            status: "Taken"
+        },
+
+        {
+            id: 3,
+            resident: "Mrs. Saraswati",
+            medicine: "Paracetamol",
+            dosage: "500 mg",
+            frequency: "Three Times Daily",
+            time: "14:00",
+            startDate: "2026-09-29",
+            status: "Pending"
+        },
+
+        {
+            id: 4,
+            resident: "Mrs. Lakshmi",
+            medicine: "Metformin",
+            dosage: "500 mg",
+            frequency: "Twice Daily",
+            time: "20:00",
+            startDate: "2026-09-29",
+            status: "Missed"
+        }
+    ];
+
+
+    /* ==========================================
+       DISPLAY DATE AND TIME
+    ========================================== */
+
+    function updateDateTime() {
+
+        const now = new Date();
+
+        const date = now.toLocaleDateString(
+            "en-IN",
+            {
+                weekday: "long",
+                year: "numeric",
+                month: "long",
+                day: "numeric"
+            }
+        );
+
+        const time = now.toLocaleTimeString(
+            "en-IN"
+        );
+
+        document.getElementById("currentDate").innerText = date;
+        document.getElementById("currentTime").innerText = time;
+    }
+
+    updateDateTime();
+
+    setInterval(updateDateTime, 1000);
+
+
+    /* ==========================================
+       DISPLAY MEDICATION TABLE
+    ========================================== */
+
+    function displayMedications(data = medications) {
+
+        const table =
+            document.getElementById("medicationTable");
+
+        table.innerHTML = "";
+
+        data.forEach(med => {
+
+            let statusClass = "";
+
+            if (med.status === "Taken") {
+                statusClass = "status-taken";
+            }
+            else if (med.status === "Pending") {
+                statusClass = "status-pending";
+            }
+            else {
+                statusClass = "status-missed";
+            }
+
+            const row = document.createElement("tr");
+
+            row.innerHTML = `
+
+                <td>
+                    <strong>${med.resident}</strong>
+                </td>
+
+                <td>${med.medicine}</td>
+
+                <td>${med.dosage}</td>
+
+                <td>${formatTime(med.time)}</td>
+
+                <td>
+                    <span class="status ${statusClass}">
+                        ${med.status}
+                    </span>
+                </td>
+
+                <td>
+
+                    ${
+                        med.status === "Pending"
+
+                        ?
+
+                        `<button
+                            class="btn-success btn-small"
+                            onclick="markTaken(${med.id})">
+                            Mark Taken
+                        </button>`
+
+                        :
+
+                        `<button
+                            class="btn-small"
+                            onclick="viewMedication(${med.id})">
+                            View
+                        </button>`
+                    }
+
+                </td>
+            `;
+
+            table.appendChild(row);
+
+        });
+
+        updateStatistics();
+    }
+
+
+    /* ==========================================
+       ALL MEDICATION TABLE
+    ========================================== */
+
+    function displayAllMedications() {
+
+        const table =
+            document.getElementById("allMedicationTable");
+
+        table.innerHTML = "";
+
+        medications.forEach(med => {
+
+            const row =
+                document.createElement("tr");
+
+            row.innerHTML = `
+
+                <td>${med.resident}</td>
+
+                <td>
+                    <strong>${med.medicine}</strong>
+                </td>
+
+                <td>${med.dosage}</td>
+
+                <td>${med.frequency}</td>
+
+                <td>${med.startDate}</td>
+
+                <td>
+
+                    <button
+                        class="btn-danger btn-small"
+                        onclick="deleteMedication(${med.id})">
+                        Delete
+                    </button>
+
+                </td>
+            `;
+
+            table.appendChild(row);
+
+        });
+    }
+
+
+    /* ==========================================
+       UPDATE STATISTICS
+    ========================================== */
+
+    function updateStatistics() {
+
+        document.getElementById("medicationCount")
+            .innerText = medications.length;
+
+        const pending =
+            medications.filter(
+                med => med.status === "Pending"
+            ).length;
+
+        const missed =
+            medications.filter(
+                med => med.status === "Missed"
+            ).length;
+
+        document.getElementById("pendingCount")
+            .innerText = pending;
+
+        document.getElementById("missedCount")
+            .innerText = missed;
+    }
+
+
+    /* ==========================================
+       MARK MEDICATION AS TAKEN
+    ========================================== */
+
+    function markTaken(id) {
+
+        const medication =
+            medications.find(med => med.id === id);
+
+        if (medication) {
+
+            medication.status = "Taken";
+
+            displayMedications();
+            displayAllMedications();
+
+            alert(
+                medication.medicine +
+                " marked as taken for " +
+                medication.resident
+            );
+        }
+    }
+
+
+    /* ==========================================
+       DELETE MEDICATION
+    ========================================== */
+
+    function deleteMedication(id) {
+
+        const confirmDelete =
+            confirm(
+                "Are you sure you want to delete this medication?"
+            );
+
+        if (!confirmDelete) {
+            return;
+        }
+
+        medications =
+            medications.filter(
+                med => med.id !== id
+            );
+
+        displayMedications();
+        displayAllMedications();
+    }
+
+
+    /* ==========================================
+       VIEW MEDICATION
+    ========================================== */
+
+    function viewMedication(id) {
+
+        const medication =
+            medications.find(
+                med => med.id === id
+            );
+
+        if (!medication) return;
+
+        alert(
+            "Resident: " + medication.resident +
+            "\nMedication: " + medication.medicine +
+            "\nDosage: " + medication.dosage +
+            "\nFrequency: " + medication.frequency +
+            "\nTime: " + formatTime(medication.time) +
+            "\nStatus: " + medication.status
+        );
+    }
+
+
+    /* ==========================================
+       SEARCH MEDICATION
+    ========================================== */
+
+    function searchMedication() {
+
+        const search =
+            document.getElementById("searchInput")
+            .value
+            .toLowerCase();
+
+        const filtered =
+            medications.filter(med =>
+                med.resident
+                    .toLowerCase()
+                    .includes(search)
+                ||
+                med.medicine
+                    .toLowerCase()
+                    .includes(search)
+            );
+
+        displayMedications(filtered);
+    }
+
+
+    /* ==========================================
+       FORMAT TIME
+    ========================================== */
+
+    function formatTime(time) {
+
+        if (!time) return "";
+
+        const [hours, minutes] =
+            time.split(":");
+
+        let h = parseInt(hours);
+
+        const ampm =
+            h >= 12 ? "PM" : "AM";
+
+        h = h % 12;
+
+        h = h ? h : 12;
+
+        return (
+            h +
+            ":" +
+            minutes +
+            " " +
+            ampm
+        );
+    }
+
+
+    /* ==========================================
+       MODAL FUNCTIONS
+    ========================================== */
+
+    function openModal() {
+
+        document.getElementById(
+            "medicationModal"
+        ).style.display = "flex";
+
+    }
+
+
+    function closeModal() {
+
+        document.getElementById(
+            "medicationModal"
+        ).style.display = "none";
+
+    }
+
+
+    window.onclick = function(event) {
+
+        const modal =
+            document.getElementById(
+                "medicationModal"
+            );
+
+        if (event.target === modal) {
+            closeModal();
+        }
+    };
+
+
+    /* ==========================================
+       ADD MEDICATION
+    ========================================== */
+
+    document.getElementById(
+        "medicationForm"
+    ).addEventListener(
+        "submit",
+        function(event) {
+
+            event.preventDefault();
+
+            const newMedication = {
+
+                id: Date.now(),
+
+                resident:
+                    document.getElementById(
+                        "residentName"
+                    ).value,
+
+                medicine:
+                    document.getElementById(
+                        "medicineName"
+                    ).value,
+
+                dosage:
+                    document.getElementById(
+                        "dosage"
+                    ).value,
+
+                frequency:
+                    document.getElementById(
+                        "frequency"
+                    ).value,
+
+                time:
+                    document.getElementById(
+                        "medicationTime"
+                    ).value,
+
+                startDate:
+                    document.getElementById(
+                        "startDate"
+                    ).value,
+
+                status: "Pending"
+
+            };
+
+
+            medications.push(
+                newMedication
+            );
+
+
+            displayMedications();
+            displayAllMedications();
+
+            document.getElementById(
+                "medicationForm"
+            ).reset();
+
+            closeModal();
+
+            alert(
+                "Medication added successfully!"
+            );
+
+        }
+    );
+
+
+    /* ==========================================
+       NAVIGATION
+    ========================================== */
+
+    function showSection(section) {
+
+        document.getElementById(
+            "dashboard"
+        ).style.display = "none";
+
+        document.getElementById(
+            "medications"
+        ).style.display = "none";
+
+        document.getElementById(
+            "residents"
+        ).style.display = "none";
+
+
+        document.getElementById(
+            section
+        ).style.display = "block";
+
+
+        const menuItems =
+            document.querySelectorAll(
+                ".menu-item"
+            );
+
+        menuItems.forEach(
+            item => item.classList.remove(
+                "active"
+            )
+        );
+
+
+        if (section === "dashboard") {
+
+            menuItems[0]
+                .classList.add("active");
+
+        }
+        else if (section === "medications") {
+
+            menuItems[1]
+                .classList.add("active");
+
+        }
+        else if (section === "residents") {
+
+            menuItems[2]
+                .classList.add("active");
+
+        }
+
+    }
+
+
+    /* ==========================================
+       ADD RESIDENT
+    ========================================== */
+
+    function addResident() {
+
+        const name =
+            prompt("Enter resident name:");
+
+        if (!name) return;
+
+        const age =
+            prompt("Enter resident age:");
+
+        const room =
+            prompt("Enter room number:");
+
+        const contact =
+            prompt("Enter contact number:");
+
+        const condition =
+            prompt("Enter medical condition:");
+
+
+        const table =
+            document.getElementById(
+                "residentTable"
+            );
+
+
+        const row =
+            document.createElement("tr");
+
+
+        row.innerHTML = `
+
+            <td>${name}</td>
+            <td>${age}</td>
+            <td>${room}</td>
+            <td>${contact}</td>
+            <td>${condition}</td>
+
+        `;
+
+
+        table.appendChild(row);
+
+
+        let count =
+            parseInt(
+                document.getElementById(
+                    "residentCount"
+                ).innerText
+            );
+
+        document.getElementById(
+            "residentCount"
+        ).innerText = count + 1;
+
+    }
+
+
+    /* ==========================================
+       INITIAL LOAD
+    ========================================== */
+
+    displayMedications();
+    displayAllMedications();
+
+</script>
+
+</body>
+</html>
